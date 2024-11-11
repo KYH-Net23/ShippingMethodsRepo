@@ -1,5 +1,8 @@
 ﻿using System.Text.Json;
-using ShippingProvider.DTO;
+using Newtonsoft.Json;
+using ShippingProvider.DTO.ServicePointDTOs;
+using ShippingProvider.DTO.TransitTimeDTOs;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ShippingProvider.Services;
 
@@ -8,7 +11,7 @@ public class ShippingService(HttpClient httpClient, string secretKey, IConfigura
     public async Task<ServicePointInformationResponseWrapper?> GetNearestServicePointsAsync(string postalCode, int numberOfServicePoints)
     {
         var baseUrl = configuration["PostNord:BaseUrl"]!;
-        var apiUrl = $"{baseUrl}servicepoints/nearest/byaddress?apikey={secretKey}&returnType=json&countryCode=SE&agreementCountry=SE&postalCode={postalCode}&numberOfServicePoints={numberOfServicePoints}&srId=EPSG:4326&context=optionalservicepoint&responseFilter=public&typeId=24,25,54";
+        var apiUrl = $"{baseUrl}businesslocation/v5/servicepoints/nearest/byaddress?apikey={secretKey}&returnType=json&countryCode=SE&agreementCountry=SE&postalCode={postalCode}&numberOfServicePoints={numberOfServicePoints}&srId=EPSG:4326&context=optionalservicepoint&responseFilter=public&typeId=24,25,54";
 
         var httpResponse = await httpClient.GetAsync(apiUrl);
 
@@ -24,4 +27,26 @@ public class ShippingService(HttpClient httpClient, string secretKey, IConfigura
             responseJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
+    
+    public async Task<List<TransitTime>> GetTransitTimesAsync(TransitTimeRequest request)
+    {
+        var baseUrl = configuration["PostNord:BaseUrl"]!;
+        var query = $"{baseUrl}" +
+                    $"transport/v1/transittime/addresstoaddress" +
+                    $"?apikey={secretKey}" +
+                    $"&startTime={Uri.EscapeDataString(request.StartTime)}" +
+                    $"&serviceGroup=SE" +
+                    $"&originPostCode={request.OriginPostalCode}" +
+                    $"&originCountryCode=SE" +
+                    $"&destinationPostCode={request.DestinationPostalCode}" +
+                    $"&destinationCountryCode=SE";
+
+        var response = await httpClient.GetAsync(query);
+
+        response.EnsureSuccessStatusCode();
+        var responseData = await response.Content.ReadAsStringAsync();
+
+        return JsonConvert.DeserializeObject<List<TransitTime>>(responseData);
+    }
+
 }
