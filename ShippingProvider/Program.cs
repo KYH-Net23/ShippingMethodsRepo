@@ -1,20 +1,36 @@
+using Azure.Identity;
+using ShippingProvider.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var vaultUri = new Uri($"{builder.Configuration["KeyVault"]!}");
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddAzureKeyVault(
+        vaultUri,
+        new VisualStudioCredential());
+}
+else
+{
+    builder.Configuration.AddAzureKeyVault(
+        vaultUri,
+        new DefaultAzureCredential());
+}
+
+var secretKey = builder.Configuration["PostnordApiKey"];
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IShippingService>(sp => 
+    new ShippingService(sp.GetRequiredService<HttpClient>(), secretKey!, sp.GetRequiredService<IConfiguration>()));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
