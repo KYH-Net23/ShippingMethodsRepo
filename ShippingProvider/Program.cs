@@ -27,7 +27,19 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IShippingService>(sp => 
     new ShippingService(sp.GetRequiredService<HttpClient>(), secretKey!, sp.GetRequiredService<IConfiguration>()));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();
