@@ -28,15 +28,16 @@ public class ShippingService(HttpClient httpClient, string secretKey, IConfigura
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
     
-    public async Task<List<TransitTime>> GetTransitTimesAsync(TransitTimeRequest request)
+    public async Task<List<TransitTimeResponse>> GetTransitTimesAsync(TransitTimeRequest request)
     {
         var baseUrl = configuration["PostNord:BaseUrl"]!;
+        var startTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
         var query = $"{baseUrl}" +
                     $"transport/v1/transittime/addresstoaddress" +
                     $"?apikey={secretKey}" +
-                    $"&startTime={Uri.EscapeDataString(request.StartTime)}" +
+                    $"&startTime={Uri.EscapeDataString(startTime)}" +
                     $"&serviceGroup=SE" +
-                    $"&originPostCode={request.OriginPostalCode}" +
+                    $"&originPostCode=14142" +
                     $"&originCountryCode=SE" +
                     $"&destinationPostCode={request.DestinationPostalCode}" +
                     $"&destinationCountryCode=SE";
@@ -51,7 +52,7 @@ public class ShippingService(HttpClient httpClient, string secretKey, IConfigura
 
         var responseJson = await httpResponse.Content.ReadAsStringAsync();
 
-        return JsonConvert.DeserializeObject<List<TransitTime>>(responseJson);
+        return JsonConvert.DeserializeObject<List<TransitTimeResponse>>(responseJson);
     }
 
 }

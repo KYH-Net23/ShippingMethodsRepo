@@ -8,5 +8,5 @@ public interface IShippingService
     Task<ServicePointInformationResponseWrapper?> GetNearestServicePointsAsync(string postalCode,
         int numberOfServicePoints);
 
-    Task<List<TransitTime>> GetTransitTimesAsync(TransitTimeRequest request);
+    Task<List<TransitTimeResponse>> GetTransitTimesAsync(TransitTimeRequest request);
 }
