@@ -41,12 +41,17 @@ public class ShippingService(HttpClient httpClient, string secretKey, IConfigura
                     $"&destinationPostCode={request.DestinationPostalCode}" +
                     $"&destinationCountryCode=SE";
 
-        var response = await httpClient.GetAsync(query);
+        var httpResponse = await httpClient.GetAsync(query);
+        
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            var errorContent = await httpResponse.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to fetch service points: {errorContent}");
+        }
 
-        response.EnsureSuccessStatusCode();
-        var responseData = await response.Content.ReadAsStringAsync();
+        var responseJson = await httpResponse.Content.ReadAsStringAsync();
 
-        return JsonConvert.DeserializeObject<List<TransitTime>>(responseData);
+        return JsonConvert.DeserializeObject<List<TransitTime>>(responseJson);
     }
 
 }
