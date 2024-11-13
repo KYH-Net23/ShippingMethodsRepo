@@ -24,7 +24,6 @@ var secretKey = builder.Configuration["PostnordApiKey"];
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IShippingService>(sp => 
@@ -50,8 +49,6 @@ app.MapScalarApiReference(o =>
     o.WithTheme(ScalarTheme.Mars);
 });
 
-// app.UseSwagger();
-// app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
