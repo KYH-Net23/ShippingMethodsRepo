@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingProvider", "ShippingProvider\ShippingProvider.csproj", "{B6E7C49B-7418-4146-906C-4C74E1A31614}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingProvider.Tests", "ShippingProvider.Tests\ShippingProvider.Tests.csproj", "{37C0E18E-2999-43A3-B09B-7B5A79B1F70F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B6E7C49B-7418-4146-906C-4C74E1A31614}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6E7C49B-7418-4146-906C-4C74E1A31614}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6E7C49B-7418-4146-906C-4C74E1A31614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C0E18E-2999-43A3-B09B-7B5A79B1F70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C0E18E-2999-43A3-B09B-7B5A79B1F70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C0E18E-2999-43A3-B09B-7B5A79B1F70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C0E18E-2999-43A3-B09B-7B5A79B1F70F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
